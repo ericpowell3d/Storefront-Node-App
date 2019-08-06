@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/ericpowell3d/Storefront-Node-App#readme",
   "dependencies": {
-    "inquirer": "^6.5.0"
+    "chalk": "^2.4.2",
+    "inquirer": "^6.5.0",
+    "mysql": "^2.17.1"
   }
 }
