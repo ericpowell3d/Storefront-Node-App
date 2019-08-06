@@ -1,0 +1,22 @@
+{
+  "name": "storefront-node-app",
+  "version": "1.0.0",
+  "description": "Node storefront similar to Amazon",
+  "main": "logic.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ericpowell3d/Storefront-Node-App.git"
+  },
+  "author": "Eric Powell",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ericpowell3d/Storefront-Node-App/issues"
+  },
+  "homepage": "https://github.com/ericpowell3d/Storefront-Node-App#readme",
+  "dependencies": {
+    "inquirer": "^6.5.0"
+  }
+}
