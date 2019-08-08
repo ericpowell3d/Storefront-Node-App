@@ -50,7 +50,7 @@ function start() {
 	});
 }
 
-
+// CUSTOMER OPTIONS //
 
 // List of options for the customer
 function customerView() {
@@ -74,7 +74,6 @@ function customerView() {
 		}
 	});
 }
-
 // Product selection for the customer view
 function customerSelection() {
 	console.log();
@@ -104,11 +103,10 @@ function customerSelection() {
 		});
 	});
 }
-
 // Selecting the amount of product the customer wants
 function customerAmount(item) {
 	console.log();
-	inquirer.prompt({ // Prompt to chose an action
+	inquirer.prompt({ // Prompt to input an amount
 		name: "amount",
 		type: "input",
 		message: "How many would you like to purchase?"
@@ -139,7 +137,7 @@ function customerAmount(item) {
 	});
 }
 
-
+// MANAGER OPTIONS //
 
 // List of options for the manager
 function managerView() {
@@ -147,7 +145,7 @@ function managerView() {
 	inquirer.prompt({ // Prompt to chose an action
 		name: "action",
 		type: "list",
-		message: "Hello manager! What would you like to do?",
+		message: "Hello Mr. Manager! What would you like to do?",
 		choices: [
 			"{BACK}",
 			"View products",
@@ -176,32 +174,146 @@ function managerView() {
 	});
 }
 
-// 
+// View current products as the manager
 function managerViewProduct() {
 	console.log();
-	
-	managerView();
+	connection.query(`SELECT id, product, department, price, stock FROM products`, function (err, res) {
+		if (err) throw err;
+		for (var i = 0; i < res.length; i++) {
+			console.log(`${res[i].id} | ${res[i].product} | ${res[i].department} | ${res[i].price} | ${res[i].stock}`);
+		}
+		managerView();
+	});
 }
 
-// 
+// View low inventory as the manager
 function managerViewLow() {
 	console.log();
-	start();
+	connection.query(`SELECT id, product, department, price, stock FROM products WHERE stock < 50`, function (err, res) {
+		if (err) throw err;
+		for (var i = 0; i < res.length; i++) {
+			console.log(`${res[i].id} | ${res[i].product} | ${res[i].department} | ${res[i].price} | ${res[i].stock}`);
+		}
+		managerView();
+	});
 }
 
-// 
+// Add to the inventory as a manager (Product selection for adding to the inventory)
 function managerAddInventory() {
 	console.log();
-	start();
+	connection.query(`SELECT id, product, department, price, stock FROM products`, function (err, res) {
+		if (err) throw err;
+		let listProducts = [`{BACK}`];
+		for (var i = 0; i < res.length; i++) {
+			listProducts.push(`${res[i].id} | ${res[i].product} | ${res[i].department} | ${res[i].price} | ${res[i].stock}`);
+		}
+		inquirer.prompt({ // Prompt to chose an action
+			name: "selection",
+			type: "list",
+			message: "Which item would you like to add more of?",
+			choices: listProducts
+		}).then(function (choice) {
+			let getItem = choice.selection.split(` | `);
+			getItem = getItem[1];
+			// console.log(getItem);
+			switch (choice.selection) {
+				case "{BACK}":
+					managerView();
+					break;
+				default:
+					managerAddAmount(getItem);
+					break;
+			}
+		});
+	});
+}
+// Selecting the amount of product the manager wants to add to the inventory
+function managerAddAmount(item) {
+	console.log();
+	inquirer.prompt({ // Prompt to input an amount
+		name: "amount",
+		type: "input",
+		message: "How many would you like to add to this stock?"
+	}).then(function (choice) {
+		connection.query(`SELECT id, product, department, price, stock FROM products WHERE ?`, { product: item }, function (err, res) {
+			if (err) throw err;
+			if (isNaN(choice.amount) || choice.amount < 0) {
+				console.log(`\nPlease enter a valid amount!`);
+				customerAmount(item);
+			}
+			else if (choice.amount == 0 || choice.amount == "") {
+				console.log(`\nNo amount added! Returning to manager view...`);
+				managerView();
+			}
+			else {
+				let cost = Math.round(res[0].price * choice.amount * 100) / 100
+				connection.query("UPDATE products SET ? WHERE ?", [{ stock: parseInt(res[0].stock) + parseInt(choice.amount) }, { product: item }], function (err, res2) { // Update the query table
+					if (err) throw err;
+					console.log(`\nYou have added ${choice.amount} ${item}(s) for the amount of $${cost.toFixed(2)}! Current stock: ${parseInt(res[0].stock) + parseInt(choice.amount)}`);
+					managerView();
+				});
+			}
+		});
+	});
 }
 
-// 
+// Add a brand new product as the manager (Select a department to add the product to)
 function managerAddProduct() {
 	console.log();
-	start();
+	connection.query(`SELECT department FROM departments`, function (err, res) {
+		if (err) throw err;
+		let listDepartments = [`{BACK}`];
+		for (var i = 0; i < res.length; i++) {
+			listDepartments.push(`${res[i].department}`);
+		}
+		inquirer.prompt({ // Prompt to chose an action
+			name: "selection",
+			type: "list",
+			message: "Which department does this item belong in?",
+			choices: listDepartments
+		}).then(function (choice) {
+			switch (choice.selection) {
+				case "{BACK}":
+					start();
+					break;
+				default:
+					inquirer.prompt([ // Prompt to input product properties
+						{
+							name: "name",
+							type: "input",
+							message: "What is the name of this product?"
+						},
+						{
+							name: "cost",
+							type: "input",
+							message: "What is the cost of this product?"
+						},
+						{
+							name: "inventory",
+							type: "input",
+							message: "How much of this product would you like to add?"
+						}
+					]).then(function (inputs) {
+						if (isNaN(inputs.cost) || inputs.cost <= 0 || isNaN(inputs.inventory) || inputs.inventory <= 0) {
+							console.log(`\nPlease enter a valid amount for either the cost or inventory!`);
+							managerView();
+						}
+						else {
+							let cost = Math.round(inputs.cost * 100) / 100
+							connection.query(`INSERT INTO products SET ?`, { product: inputs.name, department: choice.selection, price: cost.toFixed(2), stock: inputs.inventory }, function (err, res2) {
+								if (err) throw err;
+								console.log(`\nYou have added ${inputs.inventory} ${inputs.name}(s) for the amount of $${(inputs.inventory * cost).toFixed(2)}!`);
+								managerView();
+							});
+						}
+					});
+					break;
+			}
+		});
+	});
 }
 
-
+// SUPERVISOR OPTIONS //
 
 // List of options for the supervisor
 function supervisorView() {
