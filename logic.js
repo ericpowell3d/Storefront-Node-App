@@ -1,9 +1,7 @@
 // Require npm packages
 var mysql = require('mysql');
 var inquirer = require('inquirer');
-var Table = require('cli-table')
-var cc = require('chalk');
-var fs = require('fs');
+var Table = require('cli-table');
 
 // Establish the connection with mysql
 var connection = mysql.createConnection({
@@ -322,7 +320,7 @@ function managerAddProduct() {
 
 // SUPERVISOR OPTIONS //
 
-// List of options for the supervisor
+// List of options for the supervisor (COMING AT A LATER TIME)
 function supervisorView() {
 	console.log();
 	start();
