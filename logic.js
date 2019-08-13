@@ -1,6 +1,7 @@
 // Require npm packages
-var mysql = require("mysql");
-var inquirer = require("inquirer");
+var mysql = require('mysql');
+var inquirer = require('inquirer');
+var Table = require('cli-table')
 var cc = require('chalk');
 var fs = require('fs');
 
@@ -179,9 +180,12 @@ function managerViewProduct() {
 	console.log();
 	connection.query(`SELECT id, product, department, price, stock FROM products`, function (err, res) {
 		if (err) throw err;
-		for (var i = 0; i < res.length; i++) {
-			console.log(`${res[i].id} | ${res[i].product} | ${res[i].department} | ${res[i].price} | ${res[i].stock}`);
+		let table = new Table({ head: ['ID', 'PRODUCT', 'DEPARTMENT', 'PRICE', 'STOCK'], colWidths: [6, 50, 35, 12, 12] });
+		for (let i = 0; i < res.length; i++) {
+			table.push([res[i].id, res[i].product, res[i].department, res[i].price, res[i].stock]);
+			// console.log(`${res[i].id} | ${res[i].product} | ${res[i].department} | ${res[i].price} | ${res[i].stock}`);
 		}
+		console.log(table.toString());
 		managerView();
 	});
 }
@@ -191,9 +195,12 @@ function managerViewLow() {
 	console.log();
 	connection.query(`SELECT id, product, department, price, stock FROM products WHERE stock < 50`, function (err, res) {
 		if (err) throw err;
-		for (var i = 0; i < res.length; i++) {
-			console.log(`${res[i].id} | ${res[i].product} | ${res[i].department} | ${res[i].price} | ${res[i].stock}`);
+		let table = new Table({ head: ['ID', 'PRODUCT', 'DEPARTMENT', 'PRICE', 'STOCK'], colWidths: [6, 50, 35, 12, 12] });
+		for (let i = 0; i < res.length; i++) {
+			table.push([res[i].id, res[i].product, res[i].department, res[i].price, res[i].stock]);
+			// console.log(`${res[i].id} | ${res[i].product} | ${res[i].department} | ${res[i].price} | ${res[i].stock}`);
 		}
+		console.log(table.toString());
 		managerView();
 	});
 }
@@ -204,7 +211,7 @@ function managerAddInventory() {
 	connection.query(`SELECT id, product, department, price, stock FROM products`, function (err, res) {
 		if (err) throw err;
 		let listProducts = [`{BACK}`];
-		for (var i = 0; i < res.length; i++) {
+		for (let i = 0; i < res.length; i++) {
 			listProducts.push(`${res[i].id} | ${res[i].product} | ${res[i].department} | ${res[i].price} | ${res[i].stock}`);
 		}
 		inquirer.prompt({ // Prompt to chose an action
@@ -263,7 +270,7 @@ function managerAddProduct() {
 	connection.query(`SELECT department FROM departments`, function (err, res) {
 		if (err) throw err;
 		let listDepartments = [`{BACK}`];
-		for (var i = 0; i < res.length; i++) {
+		for (let i = 0; i < res.length; i++) {
 			listDepartments.push(`${res[i].department}`);
 		}
 		inquirer.prompt({ // Prompt to chose an action
