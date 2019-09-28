@@ -2,19 +2,27 @@
 
 ### Overview
 
-The Storefront Node App is similar to Amazon in that you may purchase goods as a customer, or manage goods as a manager or supervisor. Here's an example of how it looks in action:![](screenshots/action.png)
+The Storefront Node App is similar to Amazon in that you may purchase goods as a customer, or manage goods as a manager or supervisor. Here's an example of how it looks in action:
+
+![](screenshots/action.png)
 
 - - -
 
 ### How It Works
 
-* Inquirer will prompt the user on which view they would like to see, whether they are a customer, manager or supervisor. Here's what it looks like when first started:![](screenshots/start.png)
+* Inquirer will prompt the user on which view they would like to see, whether they are a customer, manager or supervisor. Here's what it looks like when first started:
+
+![](screenshots/start.png)
 
 * Once a view is selected, the user will have another set of choices on what they want to do.
 
-* Here's what it looks like for the customer view:![](screenshots/cView.png)
+* Here's what it looks like for the customer view:
 
-* Here's what it looks like for the manager view:![](screenshots/mView.png)
+![](screenshots/cView.png)
+
+* Here's what it looks like for the manager view:
+
+![](screenshots/mView.png)
 
 * Note that the supervisor view will be finished at a future date.
 
@@ -32,11 +40,17 @@ The list of commands are as follows...
 
     * Once an item is chosen, it will then prompt the user how many they want to buy. This will calculate their total.
 
-    * If the amount the customer wants is higher than the current stock, they are left with an error message and returned to entering the amount again. Here's an example screenshot of this:![](screenshots/tooHigh.png)
+    * If the amount the customer wants is higher than the current stock, they are left with an error message and returned to entering the amount again. Here's an example screenshot of this:
+    
+    ![](screenshots/tooHigh.png)
 
-    * Here's an example screenshot of the customer list command:![](screenshots/cList.png)
+    * Here's an example screenshot of the customer list command:
+    
+    ![](screenshots/cList.png)
 
-    * Here's an example screenshot of a customer transaction:![](screenshots/cPurchase.png)
+    * Here's an example screenshot of a customer transaction:
+    
+    ![](screenshots/cPurchase.png)
 
 2. `Manager View`, `View products`
 
@@ -44,7 +58,9 @@ The list of commands are as follows...
 
     * The information is gathered from the products table and printed out into a table from the cli-table npm package.
 
-    * Here's an example screenshot of the manager view products command:![](screenshots/mViewProduct.png)
+    * Here's an example screenshot of the manager view products command:
+    
+    ![](screenshots/mViewProduct.png)
 
 3. `Manager View`, `View low inventory`
 
@@ -52,7 +68,11 @@ The list of commands are as follows...
 
     * It uses the same table as the last command, but only returns elements that have a stock of 50 or less.
 
-    * Here's an example screenshot of the manager view low inventory command:![](screenshots/mViewLow.png)Currently, the only thing below 50 is a New Life, so this is all that prints out.
+    * Here's an example screenshot of the manager view low inventory command:
+    
+    ![](screenshots/mViewLow.png)
+    
+    Currently, the only thing below 50 is a New Life, so this is all that prints out.
 
 4. `Manager View`, `Add to inventory`
 
@@ -62,7 +82,9 @@ The list of commands are as follows...
 
     * Once the item is chosen, the user may input a number to add to the current stock. This number is multiplied by the cost and calculates how much was spent on restocking this product.
 
-    * Here's an example screenshot of the manager add to inventory command:![](screenshots/mAddStock.png)
+    * Here's an example screenshot of the manager add to inventory command:
+    
+    ![](screenshots/mAddStock.png)
 
 5. `Manager View`, `Add new product`
 
@@ -70,7 +92,9 @@ The list of commands are as follows...
 
     * The user inputs a series of parameters and commits the new product to the list of existing products.
 
-    * Here's an example screenshot of the manager add product command:![](screenshots/mAddNew.png)
+    * Here's an example screenshot of the manager add product command:
+    
+    ![](screenshots/mAddNew.png)
 
 6. `Supervisor View`
 
@@ -92,7 +116,9 @@ The list of commands are as follows...
 
 * Exit command was added just in case someone didn't know how to close the connection manually.
 
-* There are checks to make sure the user inputs the correct parameters when specifying an amount (prevents negatives or blanks). Here is an example:![](screenshots/error.png)
+* There are checks to make sure the user inputs the correct parameters when specifying an amount (prevents negatives or blanks). Here is an example:
+
+![](screenshots/error.png)
 
 - - -
 
